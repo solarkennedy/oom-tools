@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# oom-top.sh
+# Runs through all processes and gives you the top 10 processes most
+# likely to be killed by OOM
+
+function process_ps {
+	IFS=" "
+	local PID=${1//[[:space:]]/}; shift
+	[ -f /proc/$PID/oom_score ] && echo `cat /proc/$PID/oom_score` $*
+}
+
+IFS="
+"
+for PS in `ps -e  -o pid,command --no-headers`
+do
+	process_ps $PS
+done | sort -nr | head

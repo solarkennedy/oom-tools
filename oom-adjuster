@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# oom-adjuster
+# Runs through all processes and adjusts their OOM weight to your will
+
+# Adjustments can go from -17 to +15 and the scale is exponential
+# -17 means OOM will never kill it.
+
+#If we are a shell, then VERBOSE. Cron jobs will be silent.
+if [ -t 1 ] ; then VERBOSE=true; else VERBOSE=false; fi
+
+declare -A adjust
+adjust[sshd]=-17 #Don't OOM me bro
+adjust[java]=+15 #DIE
+
+# If you want to separate the script from the config, put your array in here
+[ -f /etc/oom-adjuster.conf ] && source /etc/oom-adjuster.conf \
+ && $VERBOSE && echo Reading in /etc/oom-adjuster.conf
+
+for Command in ${!adjust[@]}
+do 
+	Value=${adjust["$Command"]}
+	for PID in `pgrep $Command`
+	do
+		$VERBOSE && echo Adjusting $Command pid $PID to $Value
+		echo $Value >/proc/$PID/oom_adj
+	done
+done
