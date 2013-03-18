@@ -14,6 +14,7 @@ if [ -t 1 ] ; then VERBOSE=true; else VERBOSE=false; fi
 [ -f /etc/oom-adjuster.conf ] && source /etc/oom-adjuster.conf \
  && $VERBOSE && echo Reading in /etc/oom-adjuster.conf
 
+# file used for adjustment is specific to kernel version and is set in the conf file above
 [ -z $adjfile ] && echo Need /etc/oom-adjuster.conf, Exiting && exit -1
 
 echo about to
