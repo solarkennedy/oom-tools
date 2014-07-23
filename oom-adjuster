@@ -27,3 +27,5 @@ do
 		[ -f "/proc/$PID/$adjfile" ] && echo $Value >/proc/$PID/$adjfile && $VERBOSE && echo ok
 	done
 done
+
+exit 0
