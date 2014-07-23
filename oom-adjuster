@@ -24,6 +24,6 @@ do
 	for PID in `pgrep $Command`
 	do
 		$VERBOSE && echo -n Adjusting $Command pid $PID to $Value...
-		[ -f "/proc/$PID/$adjfile" ] && echo $Value >/proc/$PID/$adjfile && echo ok
+		[ -f "/proc/$PID/$adjfile" ] && echo $Value >/proc/$PID/$adjfile && $VERBOSE && echo ok
 	done
 done
