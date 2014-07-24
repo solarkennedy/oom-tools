@@ -17,13 +17,15 @@ if [ -t 1 ] ; then VERBOSE=true; else VERBOSE=false; fi
 # file used for adjustment is specific to kernel version and is set in the conf file above
 [ -z $adjfile ] && echo Need /etc/oom-adjuster.conf, Exiting && exit -1
 
-echo about to
+$VERBOSE && echo about to
 for Command in ${!adjust[@]}
 do 
 	Value=${adjust["$Command"]}
 	for PID in `pgrep $Command`
 	do
-		$VERBOSE && echo Adjusting $Command pid $PID to $Value
-		echo $Value >/proc/$PID/$adjfile
+		$VERBOSE && echo -n Adjusting $Command pid $PID to $Value...
+		[ -f "/proc/$PID/$adjfile" ] && echo $Value >/proc/$PID/$adjfile && $VERBOSE && echo ok
 	done
 done
+
+exit 0
